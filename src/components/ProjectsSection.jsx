@@ -40,21 +40,23 @@ const projects = [
   },
   {
     id: 3,
-    title: "E-commerce Platform",
+    title: "Polling Client",
     description:
-      "Full-featured e-commerce platform with user authentication and payment processing.",
+      "A real-time polling application for teachers and students built with MERN stack and TypeScript. Teachers can create polls, while students can participate and view live results instantly.",
     features: [
-      "User authentication and authorization",
-      "Product catalog and cart system",
-      "Stripe payment integration",
-      "Admin dashboard for product management",
+      "Role-based system for teachers and students",
+      "Create and participate in polls",
+      "Real-time updates with WebSockets",
+      "Secure authentication and authorization",
+      "Responsive UI with TypeScript + TailwindCSS",
     ],
     image: "/projects/project3.png",
-    tags: ["React", "Node.js", "Stripe"],
-    demoUrl: "#",
-    githubUrl: "#",
-  },
+    tags: ["React", "Node.js", "Express", "MongoDB", "TypeScript", "Socket.IO"],
+    demoUrl: "https://live-polling-client.onrender.com/", 
+    githubUrl: "https://github.com/MdAyanBadar/polling"
+  }
 ];
+
 
 export const ProjectsSection = () => {
   const [selectedProject, setSelectedProject] = useState(null);
