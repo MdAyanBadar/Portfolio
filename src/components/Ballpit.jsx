@@ -259,10 +259,13 @@ function S(e) {
         document.body.addEventListener("pointerleave", L);
         document.body.addEventListener("click", C);
 
-        document.body.addEventListener("touchstart", TouchStart, { passive: false });
-        document.body.addEventListener("touchmove", TouchMove, { passive: false });
-        document.body.addEventListener("touchend", TouchEnd, { passive: false });
-        document.body.addEventListener("touchcancel", TouchEnd, { passive: false });
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if (!isMobile) {
+          document.body.addEventListener("touchstart", TouchStart, { passive: false });
+          document.body.addEventListener("touchmove", TouchMove, { passive: false });
+          document.body.addEventListener("touchend", TouchEnd, { passive: false });
+          document.body.addEventListener("touchcancel", TouchEnd, { passive: false });
+        }
 
         R = true;
       }
@@ -331,13 +334,16 @@ function L() {
 
 function TouchStart(e) {
   if (e.touches.length > 0) {
-    e.preventDefault();
-    A.x = e.touches[0].clientX;
-    A.y = e.touches[0].clientY;
+    const touch = e.touches[0];
+    A.x = touch.clientX;
+    A.y = touch.clientY;
+
+    let touchedBall = false;
 
     for (const [elem, t] of b) {
       const rect = elem.getBoundingClientRect();
       if (D(rect)) {
+        touchedBall = true; // ✅ only if touch is inside ball
         t.touching = true;
         P(t, rect);
         if (!t.hover) {
@@ -347,12 +353,23 @@ function TouchStart(e) {
         t.onMove(t);
       }
     }
+
+    if (touchedBall) {
+      e.preventDefault(); // block scroll only when touching a ball
+    }
   }
 }
 
 function TouchMove(e) {
   if (e.touches.length > 0) {
-    e.preventDefault();
+    const dx = Math.abs(e.touches[0].clientX - A.x);
+    const dy = Math.abs(e.touches[0].clientY - A.y);
+
+    // ✅ allow vertical scroll, block only horizontal drags
+    if (dx > dy) {
+      e.preventDefault();
+    }
+
     A.x = e.touches[0].clientX;
     A.y = e.touches[0].clientY;
 
@@ -677,12 +694,10 @@ function createBallpit(e, t = {}) {
   let c = false;
 
   if (window.matchMedia("(pointer: coarse)").matches) {
-  // Phone / tablet → allow vertical scrolling
-  e.style.touchAction = "pan-y";
-} else {
-  // Desktop → full control, no scrolling
-  e.style.touchAction = "none";
-}
+    e.style.touchAction = "pan-y";
+  } else {
+    e.style.touchAction = "none";
+  }
 
   e.style.userSelect = 'none';
   e.style.webkitUserSelect = 'none';
