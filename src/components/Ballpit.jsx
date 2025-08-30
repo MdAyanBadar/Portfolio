@@ -590,7 +590,7 @@ class Z extends d {
     const r = new Y({ envMap: n, ...i.materialParams });
     r.envMapRotation.x = -Math.PI / 2;
     super(o, r, i.count);
-    this.config = i;
+    this.config = i; 
     this.physics = new W(i);
     this.#S();
     this.setColors(i.colors);
@@ -676,7 +676,14 @@ function createBallpit(e, t = {}) {
   const r = new a();
   let c = false;
 
-  e.style.touchAction = 'none';
+  if (window.matchMedia("(pointer: coarse)").matches) {
+  // Phone / tablet → allow vertical scrolling
+  e.style.touchAction = "pan-y";
+} else {
+  // Desktop → full control, no scrolling
+  e.style.touchAction = "none";
+}
+
   e.style.userSelect = 'none';
   e.style.webkitUserSelect = 'none';
 
