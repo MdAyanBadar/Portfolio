@@ -54,6 +54,7 @@ export const Timeline = ({ data }) => {
             <div className="relative w-full pl-20 pr-4 md:pl-4">
               <div className="block md:hidden mb-4 font-bold ">
                 <h3 className="text-lg">{item.date}</h3>
+                <h3 className="text-xl">{item.title}</h3>
                 <h3 className="text-xl">{item.job}</h3>
               </div>
 
@@ -61,7 +62,7 @@ export const Timeline = ({ data }) => {
               {item.contents.map((content, idx) => (
                 <p
                   key={idx}
-                  className="mb-3 text-base md:text-lg font-normal"
+                  className="mb-3 text-base md:text-lg font-normal text-left"
                 >
                   {content}
                 </p>

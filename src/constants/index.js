@@ -216,19 +216,19 @@ export const mySocials = [
 
 export const experiences = [
   {
-    title: "Intern",
+    title: "Frontend / Backend Intern",
     job: "TheQA",
-    date: "MAR 2024- AUG 2024",
+    date: "Mar 2024 – Aug 2024",
     contents: [
-      "Providing voice and chat-based support to US clients.",
-      "Making outbound calls for payment collections and account resolutions.",
-      "Delegating tasks and assisting team leads with day-to-day operations.",
-      "Managing PFS (Patient Financial Services) emails and documentation.",
-      "Maintained an average call resolution rate of 95%.",
+      "Implemented 3+ production-level features using React.js and Node.js in a cross-functional team.",
+      "Optimized frontend load time by 20% through modular SASS and lazy loading.",
+      "Enhanced backend API performance by 15% through query optimization and caching.",
+      "Participated in sprint planning, code reviews, and collaborative debugging sessions.",
+      "Maintained clean version control practices using Git and GitHub.",
     ],
   },
-  ,
 ];
+
 export const reviews = [
   {
     name: "Jack",

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -16,19 +16,20 @@ export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // ✅ Detect scroll position, but disable when menu is open
+  // ✅ Scroll tracking
   useEffect(() => {
     const handleScroll = () => {
       if (isMenuOpen) return;
-
       setIsScrolled(window.scrollY > 10);
 
       let current = "hero";
       navItems.forEach((item) => {
         const section = document.querySelector(item.href);
         if (section) {
-          const navbarHeight = document.querySelector("nav")?.offsetHeight || 0;
+          const navbarHeight =
+            document.querySelector("nav")?.offsetHeight || 0;
           const sectionTop = section.offsetTop - navbarHeight;
           if (window.scrollY >= sectionTop) {
             current = item.href.substring(1);
@@ -42,21 +43,39 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isMenuOpen]);
 
-  // ✅ Lock/unlock scroll when menu is open (on <html>)
+  // ✅ Prevent scroll when menu open
   useEffect(() => {
-    if (isMenuOpen) {
-      document.documentElement.style.overflow = "hidden";
-      window.scrollTo(0, 0);
-    } else {
-      document.documentElement.style.overflow = "";
-    }
+    document.documentElement.style.overflow = isMenuOpen ? "hidden" : "";
   }, [isMenuOpen]);
+
+  // ✅ Theme toggle
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme === "dark") {
+      setIsDarkMode(true);
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setIsDarkMode(false);
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setIsDarkMode(true);
+    }
+  };
 
   return (
     <nav
       className={cn(
         "fixed w-full z-50 transition-all duration-300",
-        isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-sm" : "py-5"
+        isScrolled
+          ? "py-3 bg-background/80 backdrop-blur-md shadow-sm"
+          : "py-5"
       )}
     >
       <div className="container flex items-center justify-between">
@@ -66,12 +85,13 @@ export const Navbar = () => {
           href="#hero"
         >
           <span className="relative z-10">
-            <span className="text-glow text-foreground">AyanTech</span> Portfolio
+            <span className="text-glow text-foreground">Ayan's</span>{" "}
+            Portfolio
           </span>
         </a>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex space-x-8">
+        <div className="hidden md:flex space-x-8 items-center">
           {navItems.map((item, key) => (
             <a
               key={key}
@@ -86,41 +106,67 @@ export const Navbar = () => {
               {item.name}
             </a>
           ))}
+
+          {/* Theme toggler (desktop) */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full transition-colors"
+          >
+            {isDarkMode ? (
+              <Sun className="h-6 w-6 text-yellow-300" />
+            ) : (
+              <Moon className="h-6 w-6 text-blue-900" />
+            )}
+          </button>
         </div>
 
-        {/* Mobile menu button with animation */}
-        <button
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="md:hidden p-2 text-foreground z-[70]"
-          aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {isMenuOpen ? (
-              <motion.div
-                key="close"
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <X size={24} />
-              </motion.div>
+        {/* Mobile actions: Theme + Menu */}
+        <div className="md:hidden flex items-center gap-3 z-[70]">
+          {/* Theme toggler (mobile) */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full transition-colors"
+          >
+            {isDarkMode ? (
+              <Sun className="h-6 w-6 text-yellow-300" />
             ) : (
-              <motion.div
-                key="menu"
-                initial={{ rotate: 90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -90, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Menu size={24} />
-              </motion.div>
+              <Moon className="h-6 w-6 text-blue-900" />
             )}
-          </AnimatePresence>
-        </button>
+          </button>
+
+          {/* Menu button */}
+          <button
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {isMenuOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <X size={24} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Menu size={24} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </button>
+        </div>
       </div>
 
-      {/* ✅ Mobile nav overlay with animation */}
+      {/* ✅ Mobile nav overlay */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
