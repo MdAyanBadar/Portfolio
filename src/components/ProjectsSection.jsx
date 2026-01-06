@@ -20,8 +20,8 @@ const baseProjects = [
     ],
     image: "/projects/project1.png",
     tags: ["React", "TailwindCSS", "Recharts", "Framer Motion"],
-    demoUrl: "https://expense-tracker-ruddy-eta-36.vercel.app/",
-    githubUrl: "https://github.com/MdAyanBadar/expense-tracker",
+    demoUrl: "https://fin-track-steel-chi.vercel.app/",
+    githubUrl: "https://github.com/MdAyanBadar/finTrack",
   },
   {
     id: 2,
