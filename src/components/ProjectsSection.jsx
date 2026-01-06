@@ -1,11 +1,7 @@
-"use client";
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ExternalLink, Github, Info, ArrowRight, X, Sparkles } from 'lucide-react';
 
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ExternalLink, Github, X, Info } from "lucide-react";
-
-/* ---------- your projects ---------- */
-/* ---------- your projects (updated: Nexora added) ---------- */
 const baseProjects = [
   {
     id: 1,
@@ -99,9 +95,7 @@ const baseProjects = [
     githubUrl: "https://github.com/MdAyanBadar/Nexora",
   },
 ];
-/* ---------------------------------------------------------- */
 
-/* ------------------------------------ */
 
 function getCardsCountForWidth(width) {
   if (width < 640) return 1;
@@ -110,20 +104,18 @@ function getCardsCountForWidth(width) {
   return 4;
 }
 
-export const ProjectsSection = () => {
+export default function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState(null);
-
   const containerRef = useRef(null);
   const rafRef = useRef(null);
   const isHoverRef = useRef(false);
   const isPointerDownRef = useRef(false);
-  const speedRef = useRef(40); // px/sec - increase to speed up
+  const speedRef = useRef(50);
   const startedRef = useRef(false);
 
-  // duplicate for seamless looping
-  const doubled = [...baseProjects, ...baseProjects];
+  // Triple the array for smoother infinite loop
+  const tripled = [...baseProjects, ...baseProjects, ...baseProjects];
 
-  // set CSS var --cards so widths compute correctly before images load
   useEffect(() => {
     const node = containerRef.current;
     if (!node) return;
@@ -135,7 +127,6 @@ export const ProjectsSection = () => {
     return () => window.removeEventListener("resize", setVar);
   }, []);
 
-  // helper: wait for all images inside the container to be loaded (or error)
   const waitForImages = (parent) => {
     const imgs = parent ? Array.from(parent.querySelectorAll("img")) : [];
     const promises = imgs.map(
@@ -149,29 +140,21 @@ export const ProjectsSection = () => {
     return Promise.all(promises);
   };
 
-  // main auto-scroll logic that waits for layout stabilization
   useEffect(() => {
     const node = containerRef.current;
     if (!node) return;
-
-    // Start only once (prevents multiple RAF loops on HMR/fast reload)
     if (startedRef.current) return;
     startedRef.current = true;
 
-    let half = 0;
+    let segmentWidth = 0;
 
-    // initialize after images/layout settled
     const initAndStart = async () => {
-      // wait for images to load, and for two frames so layout stabilizes
       await waitForImages(node);
       await new Promise((r) => requestAnimationFrame(r));
       await new Promise((r) => requestAnimationFrame(r));
 
-      // compute half now that images and sizes are final
-      half = node.scrollWidth / 2 || 1;
-
-      // set a safe start position somewhere in first half so the loop is smooth
-      node.scrollLeft = Math.min(Math.max(1, Math.floor(half / 2)), Math.max(1, half - 1));
+      segmentWidth = node.scrollWidth / 3 || 1;
+      node.scrollLeft = segmentWidth;
 
       let last = performance.now();
 
@@ -182,17 +165,14 @@ export const ProjectsSection = () => {
         if (!isHoverRef.current && !isPointerDownRef.current) {
           node.scrollLeft += speedRef.current * dt;
 
-          // re-compute half if content changed (rare), but don't over-query every frame
-          if (!half || node.scrollWidth / 2 !== half) {
-            half = node.scrollWidth / 2 || 1;
+          if (!segmentWidth || node.scrollWidth / 3 !== segmentWidth) {
+            segmentWidth = node.scrollWidth / 3 || 1;
           }
 
-          // preserve remainder when wrapping (smooth)
-          if (node.scrollLeft >= half) {
-            // keep the fractional part when subtracting half
-            node.scrollLeft = node.scrollLeft - half;
-          } else if (node.scrollLeft <= 0) {
-            node.scrollLeft = node.scrollLeft + half;
+          if (node.scrollLeft >= segmentWidth * 2) {
+            node.scrollLeft = node.scrollLeft - segmentWidth;
+          } else if (node.scrollLeft <= segmentWidth * 0.1) {
+            node.scrollLeft = node.scrollLeft + segmentWidth;
           }
         }
 
@@ -203,25 +183,14 @@ export const ProjectsSection = () => {
     };
 
     initAndStart().catch((err) => {
-      // in case of unexpected errors, still start the loop with a safe fallback
       console.error("Carousel init error:", err);
-      if (!rafRef.current) {
-        let last = performance.now();
-        rafRef.current = requestAnimationFrame(function loop(now) {
-          const dt = (now - last) / 1000;
-          last = now;
-          if (!isHoverRef.current && !isPointerDownRef.current) node.scrollLeft += speedRef.current * dt;
-          rafRef.current = requestAnimationFrame(loop);
-        });
-      }
     });
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [doubled.length]);
+  }, []);
 
-  // pause on hover
   useEffect(() => {
     const node = containerRef.current;
     if (!node) return;
@@ -235,7 +204,6 @@ export const ProjectsSection = () => {
     };
   }, []);
 
-  // pointer/touch drag handling (pauses auto-scroll while dragging)
   useEffect(() => {
     const node = containerRef.current;
     if (!node) return;
@@ -280,80 +248,127 @@ export const ProjectsSection = () => {
     };
   }, []);
 
-  // image fallback to avoid layout collapse
   const handleImgError = (e) => {
     e.currentTarget.src =
       "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='480'><rect width='100%' height='100%' fill='%23111'/><text x='50%' y='50%' fill='%23aaa' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='18'>Image not found</text></svg>";
   };
 
   return (
-    <section id="projects" className="py-24 px-0 relative">
-      <div className="w-full max-w-full px-0">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
-          Featured <span className="text-primary">Projects</span>
-        </h2>
-        <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Swipe, hover to pause, or let it glide — it's an infinite carousel.
-        </p>
+    <section id="projects" className="py-24 px-0 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 via-transparent to-transparent pointer-events-none" />
+      
+      <div className="w-full max-w-full px-0 relative">
+        <div className="text-center mb-12 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+              Featured <span className="text-primary">Projects</span>
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Swipe, hover to pause, or let it glide — an infinite showcase of innovation
+            </p>
+          </motion.div>
+        </div>
 
-        {/* CAROUSEL: note --cards default provided inline so width calc never NaN */}
         <div
           ref={containerRef}
           aria-label="projects carousel"
-          style={{ ["--cards"]: 4, minHeight: 420 }}
-          className="no-scrollbar overflow-x-auto flex gap-6 px-6 py-6 flex-nowrap"
+          style={{ ["--cards"]: 4, minHeight: 500 }}
+          className="no-scrollbar overflow-x-auto flex gap-6 px-6 py-8 flex-nowrap cursor-grab"
         >
-          {doubled.map((project, idx) => (
+          {tripled.map((project, idx) => (
             <div
               key={`${project.id}-${idx}`}
-              className="flex-shrink-0 box-border px-2"
+              className="flex-shrink-0 box-border"
               style={{
-                width: "calc(100% / var(--cards))",
+                width: "calc(100% / var(--cards) - 24px)",
                 maxWidth: "100%",
-                height: "520px", // fixed card height so all cards equal
+                minWidth: "280px"
               }}
             >
               <motion.div
-                layout
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.28 }}
-                className="h-full flex flex-col bg-white dark:bg-card rounded-xl overflow-hidden shadow-md relative"
+                transition={{ duration: 0.4, delay: (idx % 5) * 0.1 }}
+                whileHover={{ y: -8 }}
+                className="h-full flex flex-col bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 group"
               >
-                <div className="relative h-44 md:h-56 overflow-hidden rounded-t-xl">
+                {/* Image container with overlay */}
+                <div className="relative h-56 overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
                     onError={handleImgError}
-                    className="w-full h-full object-cover transition-transform duration-500"
-                    style={{ display: "block" }}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition flex items-center justify-center gap-4">
-                    <a href={project.demoUrl} target="_blank" rel="noreferrer" className="px-3 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm flex items-center gap-2">
-                      Demo <ExternalLink size={16} />
-                    </a>
-                    <a href={project.githubUrl} target="_blank" rel="noreferrer" className="px-3 py-2 rounded-lg bg-gradient-to-r from-gray-700 to-gray-900 text-white text-sm flex items-center gap-2">
-                      GitHub <Github size={16} />
-                    </a>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-60" />
+                  
+                  {/* Hover overlay with buttons */}
+                  <div className="absolute inset-0 bg-black/70 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                    <motion.a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium flex items-center gap-2 shadow-lg"
+                    >
+                      <ExternalLink size={16} />
+                      Demo
+                    </motion.a>
+                    <motion.a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm text-white text-sm font-medium flex items-center gap-2 border border-white/20"
+                    >
+                      <Github size={16} />
+                      Code
+                    </motion.a>
+                  </div>
+
+                  {/* Sparkle indicator */}
+                  <div className="absolute top-3 right-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-2">
+                    <Sparkles size={14} className="text-white" />
                   </div>
                 </div>
 
-                <div className="p-5 flex-1 flex flex-col">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {project.tags.map((t, i) => (
-                      <span key={i} className="px-2 py-1 text-xs font-medium border rounded-full bg-secondary text-secondary-foreground">
-                        {t}
+                {/* Card content */}
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map((tag, i) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
+                      >
+                        {tag}
                       </span>
                     ))}
                   </div>
 
-                  <h3 className="text-lg md:text-xl font-semibold mb-2 line-clamp-2">{project.title}</h3>
-                  <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{project.description}</p>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
+                    {project.description}
+                  </p>
 
                   <div className="mt-auto">
-                    <button className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-primary to-purple-600 text-white" onClick={() => setSelectedProject(project)}>
-                      <Info size={16} /> Know More
-                    </button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                      onClick={() => setSelectedProject(project)}
+                    >
+                      <Info size={16} />
+                      View Details
+                    </motion.button>
                   </div>
                 </div>
               </motion.div>
@@ -361,124 +376,191 @@ export const ProjectsSection = () => {
           ))}
         </div>
 
-        {/* ===== REPLACED MODAL: glassy centered modal (matches your original) ===== */}
+        {/* Enhanced Modal */}
         <AnimatePresence>
           {selectedProject && (
             <motion.div
-              key="modal"
-              className="fixed inset-0 z-50 flex items-center justify-center"
+              key="modal-backdrop"
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedProject(null)}
             >
-              {/* Backdrop */}
-              <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                aria-hidden="true"
+              <motion.div
+                className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
               />
 
-              {/* Modal Card */}
               <motion.div
-                className="relative z-10 w-full max-w-2xl mx-4 md:mx-0 rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
-                initial={{ y: 40, opacity: 0 }}
-                animate={{ y: 0, opacity: 1, transition: { type: "spring", stiffness: 220, damping: 22 } }}
-                exit={{ y: 40, opacity: 0 }}
+                className="relative z-10 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-black border border-gray-200 dark:border-gray-800 shadow-2xl"
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Close button */}
-                <button
-                  aria-label="Close project details"
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setSelectedProject(null)}
-                  className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/5 hover:bg-white/8 transition"
+                  className="absolute right-6 top-6 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all"
                 >
-                  <X size={20} className="text-white/90" />
-                </button>
+                  <X size={20} className="text-gray-900 dark:text-white" />
+                </motion.button>
 
-                {/* Top image - keeps same aspect and fills width */}
-                <div className="w-full h-56 md:h-64 overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-800">
+                {/* Hero Image */}
+                <div className="relative w-full h-72 md:h-96 overflow-hidden">
                   <img
                     src={selectedProject.image}
                     alt={selectedProject.title}
-                    onError={(e) => {
-                      e.currentTarget.src =
-                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'><rect width='100%' height='100%' fill='%23202026'/><text x='50%' y='50%' fill='%23aaa' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='20'>Image not found</text></svg>";
-                    }}
+                    onError={handleImgError}
                     className="w-full h-full object-cover"
-                    style={{ display: "block" }}
                   />
-                </div>
-
-                {/* Glassy content area */}
-                <div className="p-6 md:p-8 bg-gradient-to-b from-white/5 to-white/3 backdrop-blur-sm text-white">
-                  <h3 className="text-2xl md:text-3xl font-bold text-center mb-3">
-                    {selectedProject.title}
-                  </h3>
-
-                  {/* tags */}
-                  <div className="flex flex-wrap justify-center gap-2 mb-4">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  
+                  {/* Floating tags on image */}
+                  <div className="absolute bottom-6 left-6 flex flex-wrap gap-2">
                     {selectedProject.tags.map((tag, i) => (
-                      <span
+                      <motion.span
                         key={i}
-                        className="px-3 py-1 text-xs font-medium rounded-full bg-white/10 border border-white/6"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        className="px-4 py-2 text-sm font-semibold rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white"
                       >
                         {tag}
-                      </span>
+                      </motion.span>
                     ))}
                   </div>
+                </div>
 
-                  {/* description */}
-                  <p className="text-center text-sm md:text-base text-white/90 mb-6 max-w-[46rem] mx-auto">
+                {/* Content */}
+                <div className="p-8 md:p-12">
+                  <motion.h3
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
+                  >
+                    {selectedProject.title}
+                  </motion.h3>
+
+                  <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="text-gray-700 dark:text-gray-300 text-lg mb-8 leading-relaxed"
+                  >
                     {selectedProject.description}
-                  </p>
+                  </motion.p>
 
-                  {/* features list */}
-                  <ul className="list-disc pl-5 max-w-xl mx-auto mb-6 space-y-2 text-sm text-white/85">
-                    {selectedProject.features.map((feat, idx) => (
-                      <li key={idx}>{feat}</li>
-                    ))}
-                  </ul>
+                  {/* Features */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="mb-8"
+                  >
+                    <h4 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Key Features</h4>
+                    <div className="grid gap-3">
+                      {selectedProject.features.map((feat, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.3 + idx * 0.1 }}
+                          className="flex items-start gap-3 p-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-800"
+                        >
+                          <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-white text-xs font-bold">✓</span>
+                          </div>
+                          <span className="text-gray-700 dark:text-gray-300 leading-relaxed">{feat}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
 
                   {/* Action buttons */}
-                  <div className="flex gap-4 justify-between items-center max-w-xl mx-auto">
-                    <a
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="flex flex-col sm:flex-row gap-4"
+                  >
+                    <motion.a
                       href={selectedProject.demoUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 shadow-md hover:brightness-105 transition text-white font-semibold"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold shadow-lg hover:shadow-xl transition-all"
                     >
-                      Live Demo <ExternalLink size={16} />
-                    </a>
+                      <ExternalLink size={20} />
+                      View Live Demo
+                    </motion.a>
 
-                    <a
+                    <motion.a
                       href={selectedProject.githubUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-white/6 hover:bg-white/9 transition text-white font-medium"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-bold border-2 border-gray-200 dark:border-gray-700 hover:border-purple-500 dark:hover:border-purple-500 transition-all"
                     >
-                      GitHub <Github size={16} />
-                    </a>
-                  </div>
+                      <Github size={20} />
+                      View Source Code
+                    </motion.a>
+                  </motion.div>
                 </div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-        {/* ===== end modal replacement ===== */}
 
-        <div className="text-center mt-8">
-          <a className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white" target="_blank" rel="noreferrer" href="https://github.com/MdAyanBadar">Check My Github <ArrowRight size={16} /></a>
-        </div>
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="text-center mt-16 px-4"
+        >
+          <motion.a
+            href="https://github.com/MdAyanBadar"
+            target="_blank"
+            rel="noreferrer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all"
+          >
+            <Github size={20} />
+            Explore More on GitHub
+            <ArrowRight size={20} />
+          </motion.a>
+        </motion.div>
       </div>
 
       <style>{`
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .grabbing { cursor: grabbing !important; cursor: -webkit-grabbing !important; }
-        /* clamp fallback if you don't have Tailwind's line-clamp plugin */
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .no-scrollbar { 
+          -ms-overflow-style: none; 
+          scrollbar-width: none; 
+        }
+        .no-scrollbar::-webkit-scrollbar { 
+          display: none; 
+        }
+        .grabbing { 
+          cursor: grabbing !important; 
+          cursor: -webkit-grabbing !important; 
+        }
+        .line-clamp-3 { 
+          display: -webkit-box; 
+          -webkit-line-clamp: 3; 
+          -webkit-box-orient: vertical; 
+          overflow: hidden; 
+        }
       `}</style>
     </section>
   );
-};
+}
