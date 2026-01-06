@@ -9,7 +9,7 @@ import { ArrowRight, ExternalLink, Github, X, Info } from "lucide-react";
 const baseProjects = [
   {
     id: 1,
-    title: "Budget Tracker App",
+    title: "FinTrack - Expense Tracker",
     description:
       "A dynamic budget and expense tracker with visual insights, daily budget monitoring, and goal tracking built with React, TailwindCSS, and Recharts.",
     features: [
