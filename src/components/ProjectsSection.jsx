@@ -94,6 +94,22 @@ const baseProjects = [
     demoUrl: "https://nexora-saas-tau.vercel.app",
     githubUrl: "https://github.com/MdAyanBadar/Nexora",
   },
+  {
+    id: 6, // New unique ID
+    title: "InterviewPrep - AI Platform",
+    description:
+      "A sophisticated AI-driven interview preparation platform that uses LLMs to provide real-time feedback, scoring, and topic-wise performance analytics.",
+    features: [
+      "AI-powered subjective answer evaluation using Gemini 1.5 Flash",
+      "Hybrid grading system for instant MCQs and subjective feedback",
+      "Dynamic analytics dashboard for performance tracking",
+      "Secure JWT authentication and MongoDB session management",
+    ],
+    image: "/projects/project6.png", // Ensure you add an image at this path
+    tags: ["React", "Node.js", "MongoDB", "Google Gemini", "TailwindCSS"],
+    demoUrl: "https://interview-prep-b9m7.vercel.app",
+    githubUrl: "https://github.com/MdAyanBadar/InterviewPrep",
+  },
 ];
 
 
@@ -104,7 +120,7 @@ function getCardsCountForWidth(width) {
   return 4;
 }
 
-export default function ProjectsSection() {
+export const ProjectsSection = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const containerRef = useRef(null);
   const rafRef = useRef(null);
