@@ -106,7 +106,7 @@ const baseProjects = [
     image: "/projects/project6.png",
     tags: ["React", "Node.js", "MongoDB", "Google Gemini", "TailwindCSS"],
     demoUrl: "https://interview-prep-b9m7.vercel.app",
-    githubUrl: "https://github.com/MdAyanBadar/InterviewPrep",
+    githubUrl: "https://github.com/MdAyanBadar/interview-prep",
   },
 ];
 
