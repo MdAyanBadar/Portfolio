@@ -61,21 +61,33 @@ const baseProjects = [
     githubUrl: "https://github.com/MdAyanBadar/polling",
   },
   {
-    id: 4,
-    title: "Info-hub",
-    description:
-      "Info-hub: current weather, currency converter and a daily motivational quote bundled into a clean dashboard. Built with React & public APIs.",
-    features: [
-      "Current weather widget",
-      "Live currency converter",
-      "Daily motivational quote",
-      "Lightweight and responsive UI",
-    ],
-    image: "/projects/project4.png",
-    tags: ["React", "APIs", "Weather", "Currency"],
-    demoUrl: "https://ayan-info-hub.vercel.app/",
-    githubUrl: "https://github.com/MdAyanBadar/InfoHub",
-  },
+  id: 4,
+  title: "Info-hub",
+  description:
+    "Info-hub is an all-in-one information dashboard that brings together daily-use utilities like weather updates, currency conversion, inspirational quotes, recipe discovery, movie exploration, and country insights. Built with React and multiple public APIs, it offers a clean, responsive, and user-friendly experience.",
+  features: [
+    "Current weather widget (real-time updates)",
+    "Live currency converter",
+    "Daily motivational quote",
+    "Recipe finder with search functionality",
+    "Movie discovery and details (ratings, overview, etc.)",
+    "Country finder with key information (capital, region, population, flag)",
+    "Modular, lightweight, and responsive UI",
+  ],
+  image: "/projects/project4.png",
+  tags: [
+    "React",
+    "APIs",
+    "Weather",
+    "Currency",
+    "Recipes",
+    "Movies",
+    "Countries",
+  ],
+  demoUrl: "https://ayan-info-hub.vercel.app/",
+  githubUrl: "https://github.com/MdAyanBadar/InfoHub",
+},
+
   {
     id: 5,
     title: "Nexora",
