@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, Info, ArrowRight, X, Sparkles } from 'lucide-react';
+import { ExternalLink, Github, Info, ArrowRight, X, Sparkles, Sun, Moon } from 'lucide-react';
 
 const baseProjects = [
   {
@@ -76,8 +76,6 @@ const baseProjects = [
     demoUrl: "https://ayan-info-hub.vercel.app/",
     githubUrl: "https://github.com/MdAyanBadar/InfoHub",
   },
-
-  /* NEW: Nexora */
   {
     id: 5,
     title: "Nexora",
@@ -89,13 +87,13 @@ const baseProjects = [
       "AI-powered creative tools via Google Gemini & ClipDrop",
       "Community creations tab to explore user content",
     ],
-    image: "/projects/project5.png", // put your image at public/projects/nexora.png or change the path
+    image: "/projects/project5.png",
     tags: ["React", "Node.js", "NeonDB", "Clerk", "Google Gemini", "ClipDrop"],
     demoUrl: "https://nexora-saas-tau.vercel.app",
     githubUrl: "https://github.com/MdAyanBadar/Nexora",
   },
   {
-    id: 6, // New unique ID
+    id: 6,
     title: "InterviewPrep - AI Platform",
     description:
       "A sophisticated AI-driven interview preparation platform that uses LLMs to provide real-time feedback, scoring, and topic-wise performance analytics.",
@@ -105,13 +103,12 @@ const baseProjects = [
       "Dynamic analytics dashboard for performance tracking",
       "Secure JWT authentication and MongoDB session management",
     ],
-    image: "/projects/project6.png", // Ensure you add an image at this path
+    image: "/projects/project6.png",
     tags: ["React", "Node.js", "MongoDB", "Google Gemini", "TailwindCSS"],
     demoUrl: "https://interview-prep-b9m7.vercel.app",
     githubUrl: "https://github.com/MdAyanBadar/InterviewPrep",
   },
 ];
-
 
 function getCardsCountForWidth(width) {
   if (width < 640) return 1;
@@ -120,8 +117,9 @@ function getCardsCountForWidth(width) {
   return 4;
 }
 
-export const ProjectsSection = () => {
+export default function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [isDark, setIsDark] = useState(true);
   const containerRef = useRef(null);
   const rafRef = useRef(null);
   const isHoverRef = useRef(false);
@@ -129,7 +127,6 @@ export const ProjectsSection = () => {
   const speedRef = useRef(50);
   const startedRef = useRef(false);
 
-  // Triple the array for smoother infinite loop
   const tripled = [...baseProjects, ...baseProjects, ...baseProjects];
 
   useEffect(() => {
@@ -270,9 +267,8 @@ export const ProjectsSection = () => {
   };
 
   return (
-    <section id="projects" className="py-24 px-0 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 via-transparent to-transparent pointer-events-none" />
+    <section id="projects" className={`py-24 relative overflow-hidden ${isDark ? 'dark' : ''}`}>
+      {/* Theme Toggle Button */}
       
       <div className="w-full max-w-full px-0 relative">
         <div className="text-center mb-12 px-4">
@@ -284,9 +280,6 @@ export const ProjectsSection = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
               Featured <span className="text-primary">Projects</span>
             </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Swipe, hover to pause, or let it glide — an infinite showcase of innovation
-            </p>
           </motion.div>
         </div>
 
@@ -311,7 +304,7 @@ export const ProjectsSection = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: (idx % 5) * 0.1 }}
                 whileHover={{ y: -8 }}
-                className="h-full flex flex-col bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 group"
+                className="h-full flex flex-col rounded-2xl overflow-hidden bg-card border border-border shadow-sm hover:shadow-md transition-all duration-300 card-hover group"
               >
                 {/* Image container with overlay */}
                 <div className="relative h-56 overflow-hidden">
@@ -361,17 +354,17 @@ export const ProjectsSection = () => {
                     {project.tags.map((tag, i) => (
                       <span
                         key={i}
-                        className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
+                        className="px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary border border-primary/20"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
 
-                  <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                  <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors">
                     {project.title}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
+                  <p className="text-foreground/70 text-sm mb-6 line-clamp-3 leading-relaxed">
                     {project.description}
                   </p>
 
@@ -411,7 +404,7 @@ export const ProjectsSection = () => {
               />
 
               <motion.div
-                className="relative z-10 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-black border border-gray-200 dark:border-gray-800 shadow-2xl"
+                className="relative z-10 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl bg-card border border-border shadow-2xl"
                 initial={{ scale: 0.9, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -423,9 +416,9 @@ export const ProjectsSection = () => {
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setSelectedProject(null)}
-                  className="absolute right-6 top-6 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all"
+                  className="absolute right-6 top-6 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-card/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all border border-border"
                 >
-                  <X size={20} className="text-gray-900 dark:text-white" />
+                  <X size={20} className="text-foreground" />
                 </motion.button>
 
                 {/* Hero Image */}
@@ -468,7 +461,7 @@ export const ProjectsSection = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="text-gray-700 dark:text-gray-300 text-lg mb-8 leading-relaxed"
+                    className="text-foreground/80 text-lg mb-8 leading-relaxed"
                   >
                     {selectedProject.description}
                   </motion.p>
@@ -480,7 +473,7 @@ export const ProjectsSection = () => {
                     transition={{ delay: 0.2 }}
                     className="mb-8"
                   >
-                    <h4 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Key Features</h4>
+                    <h4 className="text-xl font-bold mb-4 text-foreground">Key Features</h4>
                     <div className="grid gap-3">
                       {selectedProject.features.map((feat, idx) => (
                         <motion.div
@@ -488,12 +481,12 @@ export const ProjectsSection = () => {
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.3 + idx * 0.1 }}
-                          className="flex items-start gap-3 p-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-800"
+                          className="flex items-start gap-3 p-4 rounded-xl bg-primary/5 border border-primary/20"
                         >
                           <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0 mt-0.5">
                             <span className="text-white text-xs font-bold">✓</span>
                           </div>
-                          <span className="text-gray-700 dark:text-gray-300 leading-relaxed">{feat}</span>
+                          <span className="text-foreground/80 leading-relaxed">{feat}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -524,7 +517,7 @@ export const ProjectsSection = () => {
                       rel="noreferrer"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-bold border-2 border-gray-200 dark:border-gray-700 hover:border-purple-500 dark:hover:border-purple-500 transition-all"
+                      className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-card text-foreground font-bold border-2 border-border hover:border-primary transition-all"
                     >
                       <Github size={20} />
                       View Source Code
