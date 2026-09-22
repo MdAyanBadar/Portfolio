@@ -216,16 +216,73 @@ export const mySocials = [
 
 export const experiences = [
   {
-    title: "Frontend / Backend Intern",
-    job: "TheQA",
-    date: "Mar 2024 – Aug 2024",
-    contents: [
-      "Implemented 3+ production-level features using React.js and Node.js in a cross-functional team.",
-      "Optimized frontend load time by 20% through modular SASS and lazy loading.",
-      "Enhanced backend API performance by 15% through query optimization and caching.",
-      "Participated in sprint planning, code reviews, and collaborative debugging sessions.",
-      "Maintained clean version control practices using Git and GitHub.",
+    role: "AI Engineer",
+    company: "BlueSprings Innovations",
+    initials: "BS",
+    location: "Hyderabad",
+    start: "2026-02",
+    end: null,
+    summary:
+      "I build AI features for a customer support platform and enterprise clients — agents, document pipelines, and the backend that keeps them reliable in production.",
+    highlights: [
+      {
+        metric: "80%",
+        metricLabel: "less manual work",
+        title: "Customer support automation",
+        text: "AI features on Temporal workflows that triage and handle routine support work for the team.",
+      },
+      {
+        metric: "99%+",
+        metricLabel: "reliability",
+        title: "Human-in-the-loop agents",
+        text: "LangGraph agents that pause for human approval at critical steps and resume safely on Temporal.",
+      },
+      {
+        metric: "45%",
+        metricLabel: "faster processing",
+        title: "Document intelligence",
+        text: "OCR and Vision Language Model pipelines that turn scanned and unstructured documents into structured data.",
+      },
+      {
+        metric: "137s → 2s",
+        metricLabel: "reranking time",
+        title: "RAG performance",
+        text: "Reworked hybrid search and reranking; end-to-end pipeline time went from 290s to about 25s.",
+      },
+      {
+        metric: "75%",
+        metricLabel: "fewer failed runs",
+        title: "Reliable async backends",
+        text: "Moved case assignment and webhook handling onto Temporal workflows with retries.",
+      },
+      {
+        metric: null,
+        title: "Security & compliance",
+        text: "Role-based access control, JWT authentication, and audit logging across the platform.",
+      },
     ],
+    also: [
+      "Contributed to an enterprise IoT platform deployed at Cyber Towers, Hyderabad.",
+      "Mentor and onboard new interns; sprint planning, code reviews, and releases in an Agile team.",
+    ],
+    stack: ["Python", "TypeScript", "FastAPI", "React", "PostgreSQL", "Temporal", "LangGraph", "VLMs", "OCR", "JWT", "SSE"],
+  },
+  {
+    role: "Frontend & Backend Intern",
+    company: "TheQA",
+    initials: "QA",
+    location: "Kolkata",
+    start: "2024-03",
+    end: "2024-08",
+    summary: "Full-stack internship on a production web app, working alongside senior developers.",
+    highlights: [],
+    also: [
+      "Shipped frontend and backend features with React.js, Node.js, Express.js, and MongoDB.",
+      "Improved app performance with lazy loading and a cleaner, more modular code structure.",
+      "Built reusable UI components and wired them to REST APIs.",
+      "Worked through Agile sprints, code reviews, and debugging sessions.",
+    ],
+    stack: ["React", "Node.js", "Express", "MongoDB", "REST APIs", "Git"],
   },
 ];
 

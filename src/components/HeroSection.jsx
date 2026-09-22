@@ -21,6 +21,9 @@ export const HeroSection = () => {
       {/* Hero content */}
       <div className="container relative z-10 max-w-4xl mx-auto text-center">
         <div className="space-y-6">
+          <span className="inline-block px-4 py-1.5 rounded-full border border-primary/40 bg-background/85 backdrop-blur-sm text-primary text-sm font-medium opacity-0 animate-fade-in">
+            AI Engineer · BlueSprings Innovations
+          </span>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
             <span className="opacity-0 animate-fade-in"> Hi, I'm MD</span>
             <span className="text-primary opacity-0 animate-fade-in-delay-1">
@@ -32,12 +35,19 @@ export const HeroSection = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto opacity-0 animate-fade-in-delay-3">
-            Computer Science graduate skilled in Python, full-stack development, and AI, passionate about building impactful and user-friendly applications.
+            I build production AI systems — agentic workflows, RAG pipelines, and
+            document intelligence — that take real work off people's plates.
           </p>
 
-          <div className="pt-4 opacity-0 animate-fade-in-delay-4">
-            <a href="#projects" className="cosmic-button">
-              View My Work
+          <div className="pt-4 flex flex-wrap justify-center gap-4 opacity-0 animate-fade-in-delay-4">
+            <a href="#experience" className="cosmic-button">
+              See My Work
+            </a>
+            <a
+              href="#contact"
+              className="px-6 py-2 rounded-full border border-primary bg-background/85 backdrop-blur-sm text-primary hover:bg-background transition-colors duration-300"
+            >
+              Get In Touch
             </a>
           </div>
         </div>

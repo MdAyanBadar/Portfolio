@@ -1,43 +1,80 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, Info, ArrowRight, X, Sparkles, Sun, Moon } from 'lucide-react';
+import { motion } from "framer-motion";
+import { ExternalLink, Github, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 
 const baseProjects = [
   {
     id: 1,
-    title: "FinTrack - Expense Tracker",
+    title: "InterviewPrep",
+    kicker: "LLM evaluation",
     description:
-      "A dynamic budget and expense tracker with visual insights, daily budget monitoring, and goal tracking built with React, TailwindCSS, and Recharts.",
+      "An AI interview coach: Gemini generates questions, grades free-text answers, and explains what was missing — so practice feels closer to a real interviewer than a quiz.",
     features: [
-      "Add and categorize expenses easily",
-      "Set daily/weekly/monthly budgets",
-      "Interactive charts for spending insights",
-      "Responsive design for all devices",
+      "LLM-generated technical questions and MCQs by topic",
+      "Subjective answers evaluated by Gemini Flash with written feedback",
+      "Dashboards for topic-wise accuracy and progress over time",
+      "JWT auth, secure REST APIs, and indexed MongoDB queries",
     ],
-    image: "/projects/project1.png",
-    tags: ["React", "TailwindCSS", "Recharts", "Framer Motion"],
-    demoUrl: "https://fin-track-steel-chi.vercel.app/",
-    githubUrl: "https://github.com/MdAyanBadar/finTrack",
+    image: "/projects/project6.png",
+    tags: ["Gemini API", "LLMs", "React", "Node.js", "MongoDB", "JWT"],
+    demoUrl: "https://interview-prep-b9m7.vercel.app",
+    githubUrl: "https://github.com/MdAyanBadar/interview-prep",
   },
   {
     id: 2,
-    title: "ML Book Recommender",
+    title: "Nexora",
+    kicker: "Generative AI SaaS",
     description:
-      "A Machine Learning powered book recommender system built with Streamlit. It suggests books dynamically using content-based filtering and provides an intuitive UI.",
+      "A full-stack AI SaaS product that bundles content generation, image processing, and resume analysis behind real auth and paid subscriptions.",
     features: [
-      "Content-based recommendation system",
-      "Interactive Streamlit app",
-      "Clean and minimal UI",
-      "Deployed with Streamlit Cloud",
+      "Gemini-powered article and title generation",
+      "AI image generation and editing (background & object removal)",
+      "Resume analysis with actionable feedback",
+      "Clerk auth with Free and Premium subscription tiers",
+      "Node.js + PostgreSQL backend with a community gallery",
+    ],
+    image: "/projects/project5.png",
+    tags: ["Google Gemini", "React", "Node.js", "PostgreSQL", "Clerk"],
+    demoUrl: "https://nexora-saas-tau.vercel.app",
+    githubUrl: "https://github.com/MdAyanBadar/Nexora",
+  },
+  {
+    id: 3,
+    title: "Book Recommender",
+    kicker: "Machine learning",
+    description:
+      "A collaborative-filtering recommender that suggests books from what similar readers liked, with precomputed similarity so results come back instantly.",
+    features: [
+      "Collaborative filtering over book rating data",
+      "Cosine similarity for low-latency recommendations",
+      "Precomputed similarity matrices to keep the app fast",
+      "Large datasets cleaned and processed with Pandas & NumPy",
+      "Interactive Streamlit UI, deployed on Streamlit Cloud",
     ],
     image: "/projects/project2.png",
-    tags: ["Python", "Streamlit", "Machine Learning"],
+    tags: ["Python", "Scikit-learn", "Pandas", "Streamlit"],
     demoUrl:
       "https://book-recommendation-krraqpcvjfhtojsrwtsrxs.streamlit.app/",
     githubUrl: "https://github.com/MdAyanBadar/book-recommendation",
   },
   {
-    id: 3,
+    id: 4,
+    title: "FinTrack",
+    kicker: "Full-stack PWA",
+    description:
+      "A personal finance app built around payday: it budgets from salary day to salary day, reads bank alerts so spending logs itself, and tells you how much is safe to spend today.",
+    features: [
+      "Auto-imports transactions from bank emails and SMS — parser for HDFC, SBI, ICICI, Axis, Kotak, slice and UPI alerts, de-duplicated by bank reference",
+      "Salary-day pay cycles with a daily allowance, recurring bills, per-category limits, and unspent budget rolling into savings",
+      "Push notifications for overspending, category limits, and bills due tomorrow, sent daily by a GitHub Actions scheduler",
+      "Installable home-screen app with insights: category breakdown, spending calendar, streaks, and cycle-by-cycle trends",
+    ],
+    image: "/projects/project1.png",
+    tags: ["React", "Node.js", "Express", "Prisma", "PostgreSQL", "Web Push", "PWA"],
+    demoUrl: "https://fin-track-steel-chi.vercel.app/",
+    githubUrl: "https://github.com/MdAyanBadar/finTrack",
+  },
+  {
+    id: 5,
     title: "Polling Client",
     description:
       "A real-time polling application for teachers and students built with MERN stack and TypeScript. Teachers can create polls, while students can participate and view live results instantly.",
@@ -61,7 +98,7 @@ const baseProjects = [
     githubUrl: "https://github.com/MdAyanBadar/polling",
   },
   {
-  id: 4,
+  id: 6,
   title: "Info-hub",
   description:
     "Info-hub is an all-in-one information dashboard that brings together daily-use utilities like weather updates, currency conversion, inspirational quotes, recipe discovery, movie exploration, and country insights. Built with React and multiple public APIs, it offers a clean, responsive, and user-friendly experience.",
@@ -87,501 +124,204 @@ const baseProjects = [
   demoUrl: "https://ayan-info-hub.vercel.app/",
   githubUrl: "https://github.com/MdAyanBadar/InfoHub",
 },
-
-  {
-    id: 5,
-    title: "Nexora",
-    description:
-      "Nexora is a modern SaaS platform that provides AI-driven creative tools, subscription-based premium access, and a community space to share and explore creative work.",
-    features: [
-      "Authentication with Clerk (email/password + social)",
-      "Subscription management and payments",
-      "AI-powered creative tools via Google Gemini & ClipDrop",
-      "Community creations tab to explore user content",
-    ],
-    image: "/projects/project5.png",
-    tags: ["React", "Node.js", "NeonDB", "Clerk", "Google Gemini", "ClipDrop"],
-    demoUrl: "https://nexora-saas-tau.vercel.app",
-    githubUrl: "https://github.com/MdAyanBadar/Nexora",
-  },
-  {
-    id: 6,
-    title: "InterviewPrep - AI Platform",
-    description:
-      "A sophisticated AI-driven interview preparation platform that uses LLMs to provide real-time feedback, scoring, and topic-wise performance analytics.",
-    features: [
-      "AI-powered subjective answer evaluation using Gemini 1.5 Flash",
-      "Hybrid grading system for instant MCQs and subjective feedback",
-      "Dynamic analytics dashboard for performance tracking",
-      "Secure JWT authentication and MongoDB session management",
-    ],
-    image: "/projects/project6.png",
-    tags: ["React", "Node.js", "MongoDB", "Google Gemini", "TailwindCSS"],
-    demoUrl: "https://interview-prep-b9m7.vercel.app",
-    githubUrl: "https://github.com/MdAyanBadar/interview-prep",
-  },
 ];
 
-function getCardsCountForWidth(width) {
-  if (width < 640) return 1;
-  if (width < 768) return 2;
-  if (width < 1024) return 3;
-  return 4;
-}
+const featured = baseProjects.slice(0, 4);
+const more = baseProjects.slice(4);
 
-export default function ProjectsSection() {
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [isDark, setIsDark] = useState(true);
-  const containerRef = useRef(null);
-  const rafRef = useRef(null);
-  const isHoverRef = useRef(false);
-  const isPointerDownRef = useRef(false);
-  const speedRef = useRef(50);
-  const startedRef = useRef(false);
+const reveal = {
+  initial: { opacity: 0, y: 32 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.2 },
+  transition: { duration: 0.55 },
+};
 
-  const tripled = [...baseProjects, ...baseProjects, ...baseProjects];
+const handleImgError = (e) => {
+  e.currentTarget.style.visibility = "hidden";
+};
 
-  useEffect(() => {
-    const node = containerRef.current;
-    if (!node) return;
-    const setVar = () => {
-      node.style.setProperty("--cards", String(getCardsCountForWidth(window.innerWidth)));
-    };
-    setVar();
-    window.addEventListener("resize", setVar);
-    return () => window.removeEventListener("resize", setVar);
-  }, []);
-
-  const waitForImages = (parent) => {
-    const imgs = parent ? Array.from(parent.querySelectorAll("img")) : [];
-    const promises = imgs.map(
-      (img) =>
-        new Promise((resolve) => {
-          if (img.complete) return resolve();
-          img.addEventListener("load", resolve, { once: true });
-          img.addEventListener("error", resolve, { once: true });
-        })
-    );
-    return Promise.all(promises);
-  };
-
-  useEffect(() => {
-    const node = containerRef.current;
-    if (!node) return;
-    if (startedRef.current) return;
-    startedRef.current = true;
-
-    let segmentWidth = 0;
-
-    const initAndStart = async () => {
-      await waitForImages(node);
-      await new Promise((r) => requestAnimationFrame(r));
-      await new Promise((r) => requestAnimationFrame(r));
-
-      segmentWidth = node.scrollWidth / 3 || 1;
-      node.scrollLeft = segmentWidth;
-
-      let last = performance.now();
-
-      function step(now) {
-        const dt = (now - last) / 1000;
-        last = now;
-
-        if (!isHoverRef.current && !isPointerDownRef.current) {
-          node.scrollLeft += speedRef.current * dt;
-
-          if (!segmentWidth || node.scrollWidth / 3 !== segmentWidth) {
-            segmentWidth = node.scrollWidth / 3 || 1;
-          }
-
-          if (node.scrollLeft >= segmentWidth * 2) {
-            node.scrollLeft = node.scrollLeft - segmentWidth;
-          } else if (node.scrollLeft <= segmentWidth * 0.1) {
-            node.scrollLeft = node.scrollLeft + segmentWidth;
-          }
-        }
-
-        rafRef.current = requestAnimationFrame(step);
+const LinkButtons = ({ project, compact = false }) => (
+  <div className={compact ? "flex gap-2" : "flex flex-wrap gap-3"}>
+    <a
+      href={project.demoUrl}
+      target="_blank"
+      rel="noreferrer"
+      className={
+        compact
+          ? "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+          : "inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-medium shadow-sm hover:shadow-[0_0_16px_hsl(var(--primary)/0.5)] hover:scale-105 transition-all"
       }
+    >
+      <ExternalLink size={compact ? 14 : 16} />
+      {compact ? "Demo" : "Live Demo"}
+    </a>
+    <a
+      href={project.githubUrl}
+      target="_blank"
+      rel="noreferrer"
+      className={
+        compact
+          ? "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm font-medium hover:border-primary/50 hover:text-primary transition-colors"
+          : "inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary text-primary font-medium hover:bg-primary/10 transition-colors"
+      }
+    >
+      <Github size={compact ? 14 : 16} />
+      Code
+    </a>
+  </div>
+);
 
-      rafRef.current = requestAnimationFrame(step);
-    };
-
-    initAndStart().catch((err) => {
-      console.error("Carousel init error:", err);
-    });
-
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    const node = containerRef.current;
-    if (!node) return;
-    const enter = () => (isHoverRef.current = true);
-    const leave = () => (isHoverRef.current = false);
-    node.addEventListener("pointerenter", enter);
-    node.addEventListener("pointerleave", leave);
-    return () => {
-      node.removeEventListener("pointerenter", enter);
-      node.removeEventListener("pointerleave", leave);
-    };
-  }, []);
-
-  useEffect(() => {
-    const node = containerRef.current;
-    if (!node) return;
-
-    let startX = 0;
-    let startScroll = 0;
-    let dragging = false;
-
-    function down(e) {
-      dragging = true;
-      isPointerDownRef.current = true;
-      startX = e.pageX ?? e.touches?.[0]?.pageX ?? 0;
-      startScroll = node.scrollLeft;
-      node.classList.add("grabbing");
-    }
-    function move(e) {
-      if (!dragging) return;
-      const x = e.pageX ?? e.touches?.[0]?.pageX ?? 0;
-      const dx = x - startX;
-      node.scrollLeft = startScroll - dx;
-    }
-    function up() {
-      dragging = false;
-      isPointerDownRef.current = false;
-      node.classList.remove("grabbing");
-    }
-
-    node.addEventListener("pointerdown", down);
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
-    node.addEventListener("touchstart", down, { passive: true });
-    window.addEventListener("touchmove", move, { passive: true });
-    window.addEventListener("touchend", up);
-
-    return () => {
-      node.removeEventListener("pointerdown", down);
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      node.removeEventListener("touchstart", down);
-      window.removeEventListener("touchmove", move);
-      window.removeEventListener("touchend", up);
-    };
-  }, []);
-
-  const handleImgError = (e) => {
-    e.currentTarget.src =
-      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='480'><rect width='100%' height='100%' fill='%23111'/><text x='50%' y='50%' fill='%23aaa' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='18'>Image not found</text></svg>";
-  };
-
+const FeaturedProject = ({ project, index }) => {
+  const flipped = index % 2 === 1;
   return (
-    <section id="projects" className={`py-24 relative overflow-hidden ${isDark ? 'dark' : ''}`}>
-      {/* Theme Toggle Button */}
-      
-      <div className="w-full max-w-full px-0 relative">
-        <div className="text-center mb-12 px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-              Featured <span className="text-primary">Projects</span>
-            </h2>
-          </motion.div>
+    <motion.article
+      {...reveal}
+      className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+    >
+      <a
+        href={project.demoUrl}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`Open ${project.title} live demo`}
+        className={`group relative lg:col-span-7 block rounded-2xl border border-border bg-card shadow-sm overflow-hidden ${
+          flipped ? "lg:order-2" : ""
+        }`}
+      >
+        <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-border bg-secondary/60">
+          <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
+          <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/80" />
+          <span className="h-2.5 w-2.5 rounded-full bg-green-400/80" />
+          <span className="ml-3 text-xs text-muted-foreground truncate">
+            {project.demoUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+          </span>
+        </div>
+        <div className="aspect-video overflow-hidden bg-secondary">
+          <img
+            src={project.image}
+            alt={`${project.title} screenshot`}
+            loading="lazy"
+            onError={handleImgError}
+            className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+          />
+        </div>
+        <div className="absolute inset-0 top-10 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300 pointer-events-none" />
+      </a>
+
+      <div className={`lg:col-span-5 text-left ${flipped ? "lg:order-1" : ""}`}>
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-5xl font-bold text-primary/25 dark:text-primary/35 leading-none tabular-nums">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wide">
+            <Sparkles size={12} />
+            {project.kicker}
+          </span>
         </div>
 
-        <div
-          ref={containerRef}
-          aria-label="projects carousel"
-          style={{ ["--cards"]: 4, minHeight: 500 }}
-          className="no-scrollbar overflow-x-auto flex gap-6 px-6 py-8 flex-nowrap cursor-grab"
-        >
-          {tripled.map((project, idx) => (
-            <div
-              key={`${project.id}-${idx}`}
-              className="flex-shrink-0 box-border"
-              style={{
-                width: "calc(100% / var(--cards) - 24px)",
-                maxWidth: "100%",
-                minWidth: "280px"
-              }}
+        <h3 className="text-2xl md:text-3xl font-bold mb-3">{project.title}</h3>
+        <p className="text-muted-foreground leading-relaxed mb-5">{project.description}</p>
+
+        <ul className="space-y-2 mb-6">
+          {project.features.slice(0, 4).map((feat) => (
+            <li key={feat} className="flex items-start gap-2.5 text-sm">
+              <CheckCircle2 size={16} className="text-primary shrink-0 mt-0.5" />
+              <span>{feat}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="flex flex-wrap gap-2 mb-6">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-2.5 py-1 rounded-md border border-border bg-secondary/50 text-xs font-medium"
             >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: (idx % 5) * 0.1 }}
-                whileHover={{ y: -8 }}
-                className="h-full flex flex-col rounded-2xl overflow-hidden bg-card border border-border shadow-sm hover:shadow-md transition-all duration-300 card-hover group"
-              >
-                {/* Image container with overlay */}
-                <div className="relative h-56 overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    onError={handleImgError}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-60" />
-                  
-                  {/* Hover overlay with buttons */}
-                  <div className="absolute inset-0 bg-black/70 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
-                    <motion.a
-                      href={project.demoUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium flex items-center gap-2 shadow-lg"
-                    >
-                      <ExternalLink size={16} />
-                      Demo
-                    </motion.a>
-                    <motion.a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm text-white text-sm font-medium flex items-center gap-2 border border-white/20"
-                    >
-                      <Github size={16} />
-                      Code
-                    </motion.a>
-                  </div>
-
-                  {/* Sparkle indicator */}
-                  <div className="absolute top-3 right-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-2">
-                    <Sparkles size={14} className="text-white" />
-                  </div>
-                </div>
-
-                {/* Card content */}
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tags.map((tag, i) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary border border-primary/20"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors">
-                    {project.title}
-                  </h3>
-                  <p className="text-foreground/70 text-sm mb-6 line-clamp-3 leading-relaxed">
-                    {project.description}
-                  </p>
-
-                  <div className="mt-auto">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                      onClick={() => setSelectedProject(project)}
-                    >
-                      <Info size={16} />
-                      View Details
-                    </motion.button>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
+              {tag}
+            </span>
           ))}
         </div>
 
-        {/* Enhanced Modal */}
-        <AnimatePresence>
-          {selectedProject && (
-            <motion.div
-              key="modal-backdrop"
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedProject(null)}
-            >
-              <motion.div
-                className="absolute inset-0 bg-black/80 backdrop-blur-md"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              />
+        <LinkButtons project={project} />
+      </div>
+    </motion.article>
+  );
+};
 
-              <motion.div
-                className="relative z-10 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl bg-card border border-border shadow-2xl"
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Close button */}
-                <motion.button
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setSelectedProject(null)}
-                  className="absolute right-6 top-6 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-card/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all border border-border"
-                >
-                  <X size={20} className="text-foreground" />
-                </motion.button>
+const MoreProjectCard = ({ project, index }) => (
+  <motion.article
+    {...reveal}
+    transition={{ duration: 0.5, delay: index * 0.08 }}
+    className="group flex flex-col rounded-2xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden shadow-sm hover:border-primary/40 hover:-translate-y-1 transition-all duration-300"
+  >
+    <div className="aspect-video overflow-hidden bg-secondary border-b border-border">
+      <img
+        src={project.image}
+        alt={`${project.title} screenshot`}
+        loading="lazy"
+        onError={handleImgError}
+        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+      />
+    </div>
+    <div className="p-5 flex-1 flex flex-col text-left">
+      <h4 className="font-semibold text-lg mb-2">{project.title}</h4>
+      <p className="text-sm text-muted-foreground line-clamp-3 mb-4">{project.description}</p>
+      <div className="flex flex-wrap gap-1.5 mb-5">
+        {project.tags.slice(0, 4).map((tag) => (
+          <span key={tag} className="px-2 py-0.5 rounded-md bg-secondary text-xs font-medium">
+            {tag}
+          </span>
+        ))}
+      </div>
+      <div className="mt-auto">
+        <LinkButtons project={project} compact />
+      </div>
+    </div>
+  </motion.article>
+);
 
-                {/* Hero Image */}
-                <div className="relative w-full h-72 md:h-96 overflow-hidden">
-                  <img
-                    src={selectedProject.image}
-                    alt={selectedProject.title}
-                    onError={handleImgError}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  
-                  {/* Floating tags on image */}
-                  <div className="absolute bottom-6 left-6 flex flex-wrap gap-2">
-                    {selectedProject.tags.map((tag, i) => (
-                      <motion.span
-                        key={i}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="px-4 py-2 text-sm font-semibold rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white"
-                      >
-                        {tag}
-                      </motion.span>
-                    ))}
-                  </div>
-                </div>
+export function ProjectsSection() {
+  return (
+    <section id="projects" className="py-24 px-4 relative">
+      <div className="container mx-auto max-w-6xl">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
+          Featured <span className="text-primary">Projects</span>
+        </h2>
+        <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-16">
+          Products I've built end to end — from the model call or the database schema
+          to the interface people actually use.
+        </p>
 
-                {/* Content */}
-                <div className="p-8 md:p-12">
-                  <motion.h3
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
-                  >
-                    {selectedProject.title}
-                  </motion.h3>
+        <div className="space-y-20 md:space-y-28">
+          {featured.map((project, i) => (
+            <FeaturedProject key={project.id} project={project} index={i} />
+          ))}
+        </div>
 
-                  <motion.p
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="text-foreground/80 text-lg mb-8 leading-relaxed"
-                  >
-                    {selectedProject.description}
-                  </motion.p>
+        <div className="mt-24">
+          <div className="flex items-center gap-4 mb-8">
+            <h3 className="text-xl font-semibold whitespace-nowrap">More things I've built</h3>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {more.map((project, i) => (
+              <MoreProjectCard key={project.id} project={project} index={i} />
+            ))}
+          </div>
+        </div>
 
-                  {/* Features */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="mb-8"
-                  >
-                    <h4 className="text-xl font-bold mb-4 text-foreground">Key Features</h4>
-                    <div className="grid gap-3">
-                      {selectedProject.features.map((feat, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.3 + idx * 0.1 }}
-                          className="flex items-start gap-3 p-4 rounded-xl bg-primary/5 border border-primary/20"
-                        >
-                          <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-white text-xs font-bold">✓</span>
-                          </div>
-                          <span className="text-foreground/80 leading-relaxed">{feat}</span>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-
-                  {/* Action buttons */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="flex flex-col sm:flex-row gap-4"
-                  >
-                    <motion.a
-                      href={selectedProject.demoUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold shadow-lg hover:shadow-xl transition-all"
-                    >
-                      <ExternalLink size={20} />
-                      View Live Demo
-                    </motion.a>
-
-                    <motion.a
-                      href={selectedProject.githubUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-card text-foreground font-bold border-2 border-border hover:border-primary transition-all"
-                    >
-                      <Github size={20} />
-                      View Source Code
-                    </motion.a>
-                  </motion.div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="text-center mt-16 px-4"
-        >
-          <motion.a
+        <div className="text-center mt-16">
+          <a
             href="https://github.com/MdAyanBadar"
             target="_blank"
             rel="noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all"
+            className="cosmic-button inline-flex items-center gap-2"
           >
-            <Github size={20} />
-            Explore More on GitHub
-            <ArrowRight size={20} />
-          </motion.a>
-        </motion.div>
+            <Github size={18} />
+            More on GitHub
+            <ArrowRight size={18} />
+          </a>
+        </div>
       </div>
-
-      <style>{`
-        .no-scrollbar { 
-          -ms-overflow-style: none; 
-          scrollbar-width: none; 
-        }
-        .no-scrollbar::-webkit-scrollbar { 
-          display: none; 
-        }
-        .grabbing { 
-          cursor: grabbing !important; 
-          cursor: -webkit-grabbing !important; 
-        }
-        .line-clamp-3 { 
-          display: -webkit-box; 
-          -webkit-line-clamp: 3; 
-          -webkit-box-orient: vertical; 
-          overflow: hidden; 
-        }
-      `}</style>
     </section>
   );
 }

@@ -1,15 +1,12 @@
-"use client";
-
-import { useState } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   SiPython,
   SiJavascript,
   SiTypescript,
-  SiSqlite,
   SiHtml5,
   SiCss3,
+  SiGnubash,
   SiBootstrap,
   SiSass,
   SiTailwindcss,
@@ -18,100 +15,175 @@ import {
   SiVite,
   SiNodedotjs,
   SiExpress,
-  SiJson,
+  SiFastapi,
+  SiRedux,
   SiGit,
+  SiGithub,
   SiDocker,
   SiPostman,
-  SiPostgresql,
-  SiMongodb,
-  SiRedis,
-  SiKubernetes,
+  SiLinux,
   SiVercel,
-  SiHeroku,
+  SiRender,
+  SiPostgresql,
+  SiMysql,
+  SiMongodb,
+  SiSqlite,
   SiPytorch,
   SiTensorflow,
   SiScikitlearn,
   SiNumpy,
   SiPandas,
+  SiHuggingface,
+  SiStreamlit,
+  SiOpenai,
+  SiGooglegemini,
+  SiLangchain,
+  SiTemporal,
 } from "react-icons/si";
-import { FaGithub } from "react-icons/fa";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import {
+  Bot,
+  Brain,
+  Code2,
+  Cpu,
+  Database,
+  FlaskConical,
+  Layers,
+  Network,
+  PenLine,
+  Puzzle,
+  ScanText,
+  Search,
+  Server,
+  Sparkles,
+  Wrench,
+  Boxes,
+  Building2,
+  BarChart3,
+} from "lucide-react";
 
-export const skills = [
-  // 🌐 Languages
-  { name: "Python", category: "languages", icon: <SiPython className="text-yellow-500" />, desc: "Python is versatile and widely used in AI, data science, and web development." },
-  { name: "JavaScript", category: "languages", icon: <SiJavascript className="text-yellow-400" />, desc: "The backbone of the web, used for frontend and backend." },
-  { name: "TypeScript", category: "languages", icon: <SiTypescript className="text-blue-500" />, desc: "Adds type safety to JavaScript, great for scalable apps." },
-  { name: "SQL", category: "languages", icon: <SiSqlite className="text-sky-600" />, desc: "SQL is the standard language for managing relational databases." },
-  { name: "Bash / Shell", category: "languages", icon: "🖥️", desc: "Scripting for automation, deployment, and system management." },
-
-  // 🎨 Web Development
-  { name: "HTML5", category: "web", icon: <SiHtml5 className="text-orange-500" />, desc: "Markup language for structuring web content." },
-  { name: "CSS3", category: "web", icon: <SiCss3 className="text-blue-600" />, desc: "Stylesheet language to design modern web interfaces." },
-  { name: "Bootstrap", category: "web", icon: <SiBootstrap className="text-purple-600" />, desc: "Frontend CSS framework for responsive websites." },
-  { name: "Sass", category: "web", icon: <SiSass className="text-pink-500" />, desc: "A CSS preprocessor for more powerful stylesheets." },
-  { name: "Tailwind CSS", category: "web", icon: <SiTailwindcss className="text-cyan-400" />, desc: "Utility-first CSS framework for fast UI design." },
-  { name: "React.js", category: "web", icon: <SiReact className="text-cyan-400" />, desc: "A library for building modern, component-driven UIs." },
-  { name: "Next.js", category: "web", icon: <SiNextdotjs className="text-black dark:text-white" />, desc: "React framework for SSR and static site generation." },
-  { name: "Vite", category: "web", icon: <SiVite className="text-purple-500" />, desc: "Next-gen frontend tooling for fast development." },
-  { name: "Node.js", category: "web", icon: <SiNodedotjs className="text-green-500" />, desc: "JavaScript runtime for server-side development." },
-  { name: "Express.js", category: "web", icon: <SiExpress className="text-gray-800 dark:text-white" />, desc: "Fast, minimalist web framework for Node.js." },
-  { name: "REST APIs", category: "web", icon: <SiJson className="text-gray-700" />, desc: "Standard for client-server communication." },
-  
-  // 🔧 Tools & DevOps
-  { name: "Git", category: "tools", icon: <SiGit className="text-red-500" />, desc: "Version control system to track code changes." },
-  { name: "GitHub", category: "tools", icon: <FaGithub className="text-gray-800 dark:text-white" />, desc: "Code hosting and collaboration platform." },
-  { name: "Docker", category: "tools", icon: <SiDocker className="text-blue-500" />, desc: "Containerization platform for portable apps." },
-  { name: "Postman", category: "tools", icon: <SiPostman className="text-orange-500" />, desc: "API testing and debugging tool." },
-  { name: "PostgreSQL", category: "tools", icon: <SiPostgresql className="text-blue-700" />, desc: "Powerful relational database system." },
-  { name: "MySQL", category: "tools", icon: "🗄️", desc: "Popular relational database management system." },
-  { name: "MongoDB", category: "tools", icon: <SiMongodb className="text-green-700" />, desc: "NoSQL database for scalable apps." },
-  
-  // 🤖 AI / ML
-  { name: "PyTorch", category: "ai", icon: <SiPytorch className="text-red-500" />, desc: "Deep learning framework for AI and neural networks." },
-  { name: "TensorFlow", category: "ai", icon: <SiTensorflow className="text-orange-500" />, desc: "Machine learning framework for scalable AI models." },
-  { name: "scikit-learn", category: "ai", icon: <SiScikitlearn className="text-green-500" />, desc: "Python library for classical machine learning algorithms." },
-  { name: "NumPy", category: "ai", icon: <SiNumpy className="text-blue-400" />, desc: "Python library for numerical computing." },
-  { name: "Pandas", category: "ai", icon: <SiPandas className="text-blue-500" />, desc: "Python library for data manipulation and analysis." },
-  { name: "Hugging Face", category: "ai", icon: "🤗", desc: "AI/ML models hub for NLP, transformers, and more." },
-
-  // ⚡ Core CS Concepts
-  { name: "Problem Solving", category: "core", icon: "⚡", desc: "Breaking down problems into efficient solutions." },
-  { name: "Data Structures", category: "core", icon: "🧩", desc: "Organizing data for optimized access and manipulation." },
-  { name: "Algorithms", category: "core", icon: "📊", desc: "Step-by-step procedures for solving computational problems." },
-  { name: "OOP", category: "core", icon: "📦", desc: "Object-Oriented Programming principles for scalable code." },
-  { name: "System Design", category: "core", icon: "🏗️", desc: "Designing efficient software architectures." },
-  { name: "Networking Fundamentals", category: "core", icon: "🌐", desc: "Understanding protocols, sockets, and network communication." },
-  { name: "Operating Systems Basics", category: "core", icon: "🖥️", desc: "Processes, memory management, and concurrency concepts." },
-
-
+const aiSkills = [
+  { name: "LLMs", icon: <Brain className="text-primary" />, desc: "Production features with structured outputs, evaluation, and guardrails." },
+  { name: "Agentic AI", icon: <Bot className="text-primary" />, desc: "Multi-step agents that call tools and hand off to humans when needed." },
+  { name: "LangGraph", icon: <SiLangchain className="text-emerald-500" />, desc: "Stateful agent graphs with human-in-the-loop checkpoints." },
+  { name: "Temporal", icon: <SiTemporal className="text-foreground" />, desc: "Durable workflows behind my agents — retries, timeouts, 99%+ reliability." },
+  { name: "RAG", icon: <Search className="text-primary" />, desc: "Hybrid search and reranking; cut one pipeline from 290s to ~25s." },
+  { name: "VLMs & OCR", icon: <ScanText className="text-primary" />, desc: "Structured extraction from scanned and unstructured documents." },
+  { name: "Prompt Engineering", icon: <PenLine className="text-primary" />, desc: "Prompts and schemas that keep model behaviour predictable." },
+  { name: "OpenAI & Gemini", icon: <span className="flex gap-1"><SiOpenai className="text-foreground" /><SiGooglegemini className="text-blue-500" /></span>, desc: "Generation, extraction, evaluation, and tool calling." },
 ];
 
-const categories = ["all", "languages", "web", "tools", "ai", "core"];
+const groups = [
+  {
+    title: "Languages",
+    subtitle: "What I write every day",
+    icon: Code2,
+    className: "lg:col-start-3 lg:row-start-1",
+    skills: [
+      { name: "Python", icon: <SiPython className="text-yellow-500" /> },
+      { name: "TypeScript", icon: <SiTypescript className="text-blue-500" /> },
+      { name: "JavaScript", icon: <SiJavascript className="text-yellow-400" /> },
+      { name: "SQL", icon: <Database className="text-sky-600" /> },
+      { name: "Bash", icon: <SiGnubash className="text-foreground" /> },
+      { name: "HTML5", icon: <SiHtml5 className="text-orange-500" /> },
+      { name: "CSS3", icon: <SiCss3 className="text-blue-600" /> },
+    ],
+  },
+  {
+    title: "Tools & Cloud",
+    subtitle: "Shipping and collaborating",
+    icon: Wrench,
+    className: "lg:col-start-3 lg:row-start-2",
+    skills: [
+      { name: "Git", icon: <SiGit className="text-red-500" /> },
+      { name: "GitHub", icon: <SiGithub className="text-foreground" /> },
+      { name: "Docker", icon: <SiDocker className="text-blue-500" /> },
+      { name: "Linux", icon: <SiLinux className="text-yellow-600" /> },
+      { name: "Postman", icon: <SiPostman className="text-orange-500" /> },
+      { name: "Vercel", icon: <SiVercel className="text-foreground" /> },
+      { name: "Render", icon: <SiRender className="text-foreground" /> },
+    ],
+  },
+  {
+    title: "Backend & Web",
+    subtitle: "APIs and the interfaces on top",
+    icon: Server,
+    skills: [
+      { name: "FastAPI", icon: <SiFastapi className="text-teal-500" /> },
+      { name: "Node.js", icon: <SiNodedotjs className="text-green-500" /> },
+      { name: "Express.js", icon: <SiExpress className="text-foreground" /> },
+      { name: "REST APIs", icon: <Network className="text-primary" /> },
+      { name: "React.js", icon: <SiReact className="text-cyan-400" /> },
+      { name: "Next.js", icon: <SiNextdotjs className="text-foreground" /> },
+      { name: "Redux", icon: <SiRedux className="text-purple-500" /> },
+      { name: "Tailwind CSS", icon: <SiTailwindcss className="text-cyan-400" /> },
+      { name: "Vite", icon: <SiVite className="text-purple-500" /> },
+      { name: "Sass", icon: <SiSass className="text-pink-500" /> },
+      { name: "Bootstrap", icon: <SiBootstrap className="text-purple-600" /> },
+    ],
+  },
+  {
+    title: "ML & Data",
+    subtitle: "Models and the data behind them",
+    icon: FlaskConical,
+    skills: [
+      { name: "scikit-learn", icon: <SiScikitlearn className="text-orange-400" /> },
+      { name: "Pandas", icon: <SiPandas className="text-indigo-500" /> },
+      { name: "NumPy", icon: <SiNumpy className="text-blue-400" /> },
+      { name: "PyTorch", icon: <SiPytorch className="text-red-500" /> },
+      { name: "TensorFlow", icon: <SiTensorflow className="text-orange-500" /> },
+      { name: "Hugging Face", icon: <SiHuggingface className="text-yellow-500" /> },
+      { name: "Streamlit", icon: <SiStreamlit className="text-red-500" /> },
+    ],
+  },
+  {
+    title: "Databases",
+    subtitle: "Where the data lives",
+    icon: Database,
+    skills: [
+      { name: "PostgreSQL", icon: <SiPostgresql className="text-blue-700 dark:text-blue-400" /> },
+      { name: "MongoDB", icon: <SiMongodb className="text-green-600" /> },
+      { name: "MySQL", icon: <SiMysql className="text-sky-700 dark:text-sky-400" /> },
+      { name: "SQLite", icon: <SiSqlite className="text-sky-600" /> },
+    ],
+  },
+  {
+    title: "Core CS",
+    subtitle: "Fundamentals I lean on",
+    icon: Cpu,
+    className: "md:col-span-2 lg:col-span-3",
+    skills: [
+      { name: "Data Structures", icon: <Puzzle className="text-primary" /> },
+      { name: "Algorithms", icon: <BarChart3 className="text-primary" /> },
+      { name: "System Design", icon: <Building2 className="text-primary" /> },
+      { name: "OOP", icon: <Boxes className="text-primary" /> },
+      { name: "API Design", icon: <Network className="text-primary" /> },
+      { name: "Microservices", icon: <Layers className="text-primary" /> },
+      { name: "Operating Systems", icon: <Cpu className="text-primary" /> },
+      { name: "Agile / Scrum", icon: <Sparkles className="text-primary" /> },
+    ],
+  },
+];
+
+const reveal = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.15 },
+};
+
+const CardHeader = ({ icon: Icon, title, subtitle, count }) => (
+  <div className="flex items-center gap-3 mb-5">
+    <div className="p-2.5 rounded-xl bg-primary/10">
+      <Icon className="h-5 w-5 text-primary" />
+    </div>
+    <div className="text-left flex-1 min-w-0">
+      <h3 className="font-semibold text-lg leading-tight">{title}</h3>
+      <p className="text-sm text-muted-foreground">{subtitle}</p>
+    </div>
+    <span className="text-xs font-medium text-muted-foreground tabular-nums">{count}</span>
+  </div>
+);
 
 export const SkillsSection = () => {
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [selectedIndex, setSelectedIndex] = useState(null);
-  const [hoveredCategory, setHoveredCategory] = useState(null);
-
-  const filteredSkills = skills.filter(
-    (skill) => activeCategory === "all" || skill.category === activeCategory
-  );
-
-  const selectedSkill = selectedIndex !== null ? filteredSkills[selectedIndex] : null;
-
-  const handleNext = () => {
-    setSelectedIndex((prev) =>
-      prev === filteredSkills.length - 1 ? 0 : prev + 1
-    );
-  };
-
-  const handlePrev = () => {
-    setSelectedIndex((prev) =>
-      prev === 0 ? filteredSkills.length - 1 : prev - 1
-    );
-  };
-
   return (
     <section id="skills" className="py-24 px-4 relative bg-secondary/30">
       <div className="container mx-auto max-w-6xl">
@@ -119,123 +191,81 @@ export const SkillsSection = () => {
           My <span className="text-primary">Skills</span>
         </h2>
 
-        {/* Category Filter */}
-        <div className="relative flex flex-wrap justify-center gap-3 mb-12">
-          {categories.map((category, key) => {
-            const isActive = activeCategory === category;
-            return (
-              <button
-                key={key}
-                onClick={() => {
-                  setActiveCategory(category);
-                  setSelectedIndex(null);
-                }}
-                className={cn(
-                  "relative px-5 py-2 rounded-full text-sm font-medium capitalize transition-all duration-300",
-                  isActive
-                    ? "text-white scale-105"
-                    : "bg-secondary/70 text-foreground hover:bg-secondary/90"
-                )}
-              >
-                {category}
-                {isActive && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute inset-0 rounded-full bg-primary shadow-md -z-10"
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Skills Grid */}
-        <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-          {filteredSkills.map((skill, index) => (
-            <motion.div
-              key={index}
-              layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.03 }}
-              className="relative bg-gradient-to-br from-card to-secondary/40 backdrop-blur-sm px-6 py-6 
-                         rounded-2xl shadow-sm hover:shadow-xl transition transform hover:scale-105
-                         border border-transparent hover:border-primary/40 text-center group cursor-pointer"
-              onClick={() => setSelectedIndex(index)}
-            >
-              <div className="flex justify-center items-center text-4xl mb-3">
-                {skill.icon}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div
+            {...reveal}
+            transition={{ duration: 0.5 }}
+            className="relative md:col-span-2 lg:row-span-2 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card p-6 md:p-8 shadow-sm overflow-hidden"
+          >
+            <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/20 blur-3xl pointer-events-none" />
+            <div className="relative">
+              <div className="flex flex-wrap items-center gap-3 mb-2">
+                <div className="p-2.5 rounded-xl bg-primary text-primary-foreground">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-2xl">AI Engineering</h3>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/15 text-primary">
+                  Primary focus
+                </span>
               </div>
-              <h3 className="font-semibold text-lg">{skill.name}</h3>
-              <span className="text-xs mt-2 inline-block px-2 py-1 rounded-full bg-primary/10 text-primary">
-                {skill.category}
-              </span>
+              <p className="text-muted-foreground text-left mb-6 max-w-xl">
+                What I use at BlueSprings to put LLMs into production, and keep them reliable once they're there.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {aiSkills.map((skill, i) => (
+                  <motion.div
+                    key={skill.name}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.35, delay: 0.1 + i * 0.04 }}
+                    className="flex items-start gap-3 p-3.5 rounded-xl border border-border bg-background/60 backdrop-blur-sm text-left transition-colors hover:border-primary/50"
+                  >
+                    <div className="shrink-0 h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl [&_svg]:h-5 [&_svg]:w-5">
+                      {skill.icon}
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="font-semibold leading-tight">{skill.name}</h4>
+                      <p className="text-sm text-muted-foreground mt-0.5">{skill.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {groups.map((group, gi) => (
+            <motion.div
+              key={group.title}
+              {...reveal}
+              transition={{ duration: 0.5, delay: 0.05 * gi }}
+              className={cn(
+                "rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6 shadow-sm transition-colors hover:border-primary/30",
+                group.className
+              )}
+            >
+              <CardHeader
+                icon={group.icon}
+                title={group.title}
+                subtitle={group.subtitle}
+                count={group.skills.length}
+              />
+              <div className="flex flex-wrap gap-2">
+                {group.skills.map((skill) => (
+                  <span
+                    key={skill.name}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-secondary/50 text-sm font-medium transition-colors hover:border-primary/50 hover:bg-primary/10 [&_svg]:h-4 [&_svg]:w-4"
+                  >
+                    {skill.icon}
+                    {skill.name}
+                  </span>
+                ))}
+              </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
-
-      {/* Popup Modal */}
-      <AnimatePresence>
-        {selectedSkill && (
-          <motion.div
-            key="modal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-            onClick={() => setSelectedIndex(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-card max-w-md w-full p-6 rounded-2xl shadow-lg relative text-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close button */}
-              <button
-                className="absolute top-4 right-4 text-gray-500 hover:text-primary"
-                onClick={() => setSelectedIndex(null)}
-              >
-                <X size={24} />
-              </button>
-
-              {/* Icon */}
-              <div className="text-5xl mb-4 flex justify-center">{selectedSkill.icon}</div>
-
-              {/* Name */}
-              <h3 className="text-2xl font-bold mb-2">{selectedSkill.name}</h3>
-
-              {/* Category */}
-              <span className="inline-block mb-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm">
-                {selectedSkill.category.toUpperCase()}
-              </span>
-
-              {/* Description */}
-              <p className="text-gray-300 text-base leading-relaxed">{selectedSkill.desc}</p>
-
-              {/* Navigation buttons */}
-              <div className="flex justify-between items-center mt-6">
-                <button
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary hover:bg-secondary/80"
-                  onClick={handlePrev}
-                >
-                  <ChevronLeft size={20} /> Prev
-                </button>
-                <button
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary hover:bg-secondary/80"
-                  onClick={handleNext}
-                >
-                  Next <ChevronRight size={20} />
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 };
